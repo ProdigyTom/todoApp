@@ -1,4 +1,4 @@
-exports.AppView = Backbone.View.extend({
+var AppView = Backbone.View.extend({
     el: $(".todoapp"),
 
 })

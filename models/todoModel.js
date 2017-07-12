@@ -1,11 +1,10 @@
-exports.ToDoItem = Backbone.Model.extend({
+var TodoItem = Backbone.Model.extend({
     defaults: {
         name: "Empty Todo",
         desc: "Empty Description"
     }
-
 })
 
-exports.TodoList = Backbone.Collection.extend({
-    model: ToDoItem
+var TodoList = Backbone.Collection.extend({
+    model: TodoItem
 })
