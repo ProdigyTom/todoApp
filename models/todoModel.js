@@ -11,7 +11,7 @@ var TodoItem = Backbone.Model.extend({
 
 var TodoList = Backbone.Collection.extend({
     model: TodoItem,
-    done: function() {
+    complete: function() {
       return this.where({complete: true});
     },
     remaining: function() {

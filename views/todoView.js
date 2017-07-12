@@ -15,7 +15,7 @@ var TodoView = Backbone.View.extend({
     },
     open: false,
     initialize: function() {
-        //this.render()
+        this.model.on('hide', this.remove, this);
     },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
@@ -30,20 +30,26 @@ var TodoView = Backbone.View.extend({
         this.render()
     },
     delete: function() {
-        this.$el.remove();
+        this.remove()
+        this.model.destroy()
     }
 })
 
 var TodoListView = Backbone.View.extend({
     initialize: function() {
-        this.render()
+        this.collection.on('add', this.addOne, this);
+        this.collection.on('reset', this.addAll, this);
+        this.render();
     },
     render: function() {
         this.$el.html('');
-        this.collection.forEach(this.addOne, this)
+        this.collection.forEach(this.addOne, this);
     },
     addOne: function(todoItem){
         var todoView = new TodoView({model: todoItem})
         this.$el.append(todoView.render().el);
+    },
+    addAll: function(){
+        this.collection.forEach(this.addOne, this)
     }
 });
