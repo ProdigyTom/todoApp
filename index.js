@@ -1,9 +1,8 @@
-var TodoModel = require(__dirname + '/models/todoModel').ToDoItem;
-var TodoCollection = require(__dirname + '/models/todoModel').ToDoList;
-var TodoView = require(__dirname + '/views/todoView').TodoView;
-var AppView = require(__dirname + '/views/appView').AppView;
-
-
-$(function(){
-    
-})
+var todoList = new TodoList();
+var todos = [
+    {name: 'Shopping', desc: 'Get eggs, milk, butter'},
+    {name: 'work', desc: 'do work'},
+    {name: 'clean', desc: 'kitchen, bedroom, bathroom'}
+]
+todoList.reset(todos);
+new TodoListView({ el: '#todo-list', collection: todoList})
