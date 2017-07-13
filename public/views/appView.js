@@ -11,12 +11,13 @@ var AppView = Backbone.View.extend({
     initialize: function(){
         this.render()
         this.todoList = new TodoList();
-        var todos = [
+        /*var todos = [
             {name: 'Shopping', desc: 'Get eggs, milk, butter'},
             {name: 'work', desc: 'do work', complete: true},
             {name: 'clean', desc: 'kitchen, bedroom, bathroom'}
         ]
-        this.todoList.reset(todos);
+        this.todoList.reset(todos);*/
+        this.todoList.fetch();
         new TodoListView({ el: '#todo-list', collection: this.todoList})
     },
     render: function() {
@@ -25,7 +26,10 @@ var AppView = Backbone.View.extend({
     },
     createNew: function(e) {
         e.preventDefault()
-        var todo = { name: this.$('input[name=newName]').val(), desc: this.$('input[name=newDesc]').val() }
-        this.todoList.reset(todo);
+        var todo = {
+            name: this.$('input[name=newName]').val(),
+            desc: this.$('input[name=newDesc]').val()
+        }
+        this.todoList.add(todo);
     }
 })
