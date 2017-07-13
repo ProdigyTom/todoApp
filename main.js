@@ -4,14 +4,19 @@ var Item = require(__dirname + '/lib/item');
 var Owner = require(__dirname + '/lib/owner');
 var List = require(__dirname + '/lib/list');
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.static('public'))
 
 app.get('/items/:itemId', function (req, res) {
     var item = new Item();
-    item.getItemQuery(req.params.itemId, function(err, data){
+    item.getItemQuery(req.body.id, function(err, data){
         if(err){
             res.status(500)
             res.send(err)
+            return
         }
         res.send(data);
     });
@@ -19,33 +24,31 @@ app.get('/items/:itemId', function (req, res) {
 
 app.delete('/items/:itemId', function (req, res) {
     var item = new Item();
-    res.status(204);
     item.deleteItemQuery(req.params.itemId, function(err, data){
         if(err){
             res.status(500)
             res.send(err)
+            return
         }
-        res.send(data);
+        res.sendStatus(204);
     });
 })
 
 app.post('/items', function (req, res) {
-    if(!req.query.itemName){
+    if(!req.body.name){
         res.status(422);
         res.send('{error: "missing itemName in request"}')
-    }else if(!req.query.itemDescription){
+    }else if(!req.body.desc){
         res.status(422);
         res.send('{error: "missing itemDescription in request"}')
-    }else if(!req.query.listId){
-        res.status(422);
-        res.send('{error: "missing listId in request"}')
     }else{
         var item = new Item();
         res.status(201);
-        item.createItemQuery(req.query, function(err, data){
+        item.createItemQuery(req.body, function(err, data){
             if(err){
                 res.status(500)
                 res.send(err)
+                return
             }
             res.send(data);
         });
@@ -53,18 +56,18 @@ app.post('/items', function (req, res) {
 })
 
 app.put('/items/:itemId', function (req, res) {
-    if(!req.query.itemName && !req.query.itemDescription && !req.query.listId){
+    if(!req.body.name && !req.body.desc && !req.body.listId){
         res.status(422);
         res.send('{error: "missing parameters in request"}')
     }else{
         var item = new Item();
-        res.status(204);
-        item.editItemQuery(req.query, req.params.itemId, function(err, data){
+        item.editItemQuery(req.body, req.params.itemId, function(err, data){
             if(err){
                 res.status(500)
                 res.send(err)
+                return
             }
-            res.send(data);
+            res.sendStatus(204);
         });
     }
 })
@@ -75,6 +78,7 @@ app.get('/items', function (req, res) {
         if(err){
             res.status(500)
             res.send(err)
+            return
         }
         res.send(data);
     });
