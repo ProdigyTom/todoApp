@@ -3,7 +3,9 @@ var TodoItem = Backbone.Model.extend({
     defaults: {
         name: "Empty Todo",
         desc: "Empty Description",
-        complete: false
+        complete: false,
+        open: false,
+        hidden: false
     },
     toJSON: function() {
         //The way I wrote the backend listId is a foreign key to the list table and cannot be null,
@@ -14,9 +16,18 @@ var TodoItem = Backbone.Model.extend({
         }
         return attributes
     },
-    toggle: function() {
+    toggleComplete: function() {
         this.set({complete: !this.get("complete")});
         this.save();
+    },
+    toggleOpen: function() {
+        this.set({open: !this.get("open")});
+    },
+    hide: function() {
+        this.set({hidden: true});
+    },
+    show: function() {
+        this.set({hidden: false});
     },
 })
 
@@ -24,10 +35,27 @@ var TodoList = Backbone.Collection.extend({
     model: TodoItem,
     url: '/items',
     comparator: 'id',
-    getCompleted: function() {
-        return this.where({complete: true});
+    showAll: function() {
+        this.forEach(function(todo){
+            todo.show()
+        })
     },
-    getRemaining: function() {
-        return this.where({complete: false});
+    showCompleted: function() {
+        this.forEach(function(todo){
+            if(todo.get("complete")){
+                todo.show()
+            } else {
+                todo.hide()
+            }
+        })
+    },
+    showRemaining: function() {
+        this.forEach(function(todo){
+            if(todo.get("complete")){
+                todo.hide()
+            } else {
+                todo.show()
+            }
+        })
     },
 })
